@@ -67,19 +67,22 @@ export default {
           name: 'London',
           minTemp: '',
           maxTemp: '',
-          id: 1
+          id: 1,
+          cords: 'latitude=51.51&longitude=-0.13'
         },
         {
           name: 'Berlin',
           minTemp: '',
           maxTemp: '',
-          id: 2
+          id: 2,
+          cords: 'latitude=52.52&longitude=13.41'
         },
         {
           name: 'Lisbon',
           minTemp: '',
           maxTemp: '',
-          id: 3
+          id: 3,
+          cords: 'latitude=38.72&longitude=-9.13'
         }
       ],
       predefinedCities: [
@@ -87,37 +90,43 @@ export default {
           name: 'Melbourne',
           minTemp: '',
           maxTemp: '',
-          id: 4
+          id: 4,
+          cords: 'latitude=-37.81&longitude=144.96'
         },
         {
           name: 'Rome',
           minTemp: '',
           maxTemp: '',
-          id: 5
+          id: 5,
+          cords: 'latitude=41.89&longitude=12.51'
         },
         {
           name: 'Paris',
           minTemp: '',
           maxTemp: '',
-          id: 6
+          id: 6,
+          cords: 'latitude=48.85&longitude=2.35'
         },
         {
           name: 'Ottawa',
           minTemp: '',
           maxTemp: '',
-          id: 7
+          id: 7,
+          cords: 'latitude=45.41&longitude=-75.70'
         },
         {
           name: 'Manchester',
           minTemp: '',
           maxTemp: '',
-          id: 8
+          id: 8,
+          cords: 'latitude=53.48&longitude=-2.24'
         },
         {
           name: 'Bruges',
           minTemp: '',
           maxTemp: '',
-          id: 9
+          id: 9,
+          cords: 'latitude=51.21&longitude=3.22'
         }
       ],
       isListActive: false,
@@ -125,91 +134,25 @@ export default {
     }
   },
   methods: {
-    async fetchTempForDefaultCities () {
+    async fetchTemperature (city) {
       try {
-        const response = await axios.get('https://api.open-meteo.com/v1/forecast?latitude=51.51&longitude=-0.13&daily=temperature_2m_max,temperature_2m_min&current_weather=true&timezone=auto')
-        const selectCity = this.selectedCities.find(el => el.name === 'London')
-        selectCity.minTemp = response.data.daily.temperature_2m_min[0]
-        selectCity.maxTemp = response.data.daily.temperature_2m_max[0]
+        const response = await axios.get(`https://api.open-meteo.com/v1/forecast?${city.cords}&daily=temperature_2m_max,temperature_2m_min&current_weather=true&timezone=auto`)
+        city.minTemp = response.data.daily.temperature_2m_min[0]
+        city.maxTemp = response.data.daily.temperature_2m_max[0]
       } catch (e) {
-        alert('Owibqa London')
+        alert('Owibqa' + city.name)
       }
-      try {
-        const response = await axios.get('https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&daily=temperature_2m_max,temperature_2m_min&current_weather=true&timezone=auto')
-        const selectCity = this.selectedCities.find(el => el.name === 'Berlin')
-        selectCity.minTemp = response.data.daily.temperature_2m_min[0]
-        selectCity.maxTemp = response.data.daily.temperature_2m_max[0]
-      } catch (e) {
-        alert('Owibqa Berlin')
-      }
-      try {
-        const response = await axios.get('https://api.open-meteo.com/v1/forecast?latitude=38.72&longitude=-9.13&daily=temperature_2m_max,temperature_2m_min&current_weather=true&timezone=auto')
-        const selectCity = this.selectedCities.find(el => el.name === 'Lisbon')
-        selectCity.minTemp = response.data.daily.temperature_2m_min[0]
-        selectCity.maxTemp = response.data.daily.temperature_2m_max[0]
-      } catch (e) {
-        alert('Owibqa Lisbon')
+    },
+    async fetchForDefaultCities () {
+      for (const e of this.selectedCities) {
+        await this.fetchTemperature(e)
       }
     },
     async addNewCity (value) {
-      const selectedCity = this.predefinedCities.find(city => city.name === value)
-      this.selectedCities.push(selectedCity)
-      if (selectedCity.name === 'Melbourne') {
-        try {
-          const response = await axios.get('https://api.open-meteo.com/v1/forecast?latitude=-37.81&longitude=144.96&daily=temperature_2m_max,temperature_2m_min&current_weather=true&timezone=auto')
-          const selectCity = this.selectedCities.find(el => el.name === 'Melbourne')
-          selectCity.minTemp = response.data.daily.temperature_2m_min[0]
-          selectCity.maxTemp = response.data.daily.temperature_2m_max[0]
-        } catch (e) {
-          alert('Owibqa Melbourne')
-        }
-      } else if (selectedCity.name === 'Rome') {
-        try {
-          const response = await axios.get('https://api.open-meteo.com/v1/forecast?latitude=41.89&longitude=12.51&daily=temperature_2m_max,temperature_2m_min&current_weather=true&timezone=auto')
-          const selectCity = this.selectedCities.find(el => el.name === 'Rome')
-          selectCity.minTemp = response.data.daily.temperature_2m_min[0]
-          selectCity.maxTemp = response.data.daily.temperature_2m_max[0]
-        } catch (e) {
-          alert('Owibqa Rome')
-        }
-      } else if (selectedCity.name === 'Paris') {
-        try {
-          const response = await axios.get('https://api.open-meteo.com/v1/forecast?latitude=48.85&longitude=2.35&daily=temperature_2m_max,temperature_2m_min&current_weather=true&timezone=auto')
-          const selectCity = this.selectedCities.find(el => el.name === 'Paris')
-          selectCity.minTemp = response.data.daily.temperature_2m_min[0]
-          selectCity.maxTemp = response.data.daily.temperature_2m_max[0]
-        } catch (e) {
-          alert('Owibqa Paris')
-        }
-      } else if (selectedCity.name === 'Ottawa') {
-        try {
-          const response = await axios.get('https://api.open-meteo.com/v1/forecast?latitude=45.41&longitude=-75.70&daily=temperature_2m_max,temperature_2m_min&current_weather=true&timezone=auto')
-          const selectCity = this.selectedCities.find(el => el.name === 'Ottawa')
-          selectCity.minTemp = response.data.daily.temperature_2m_min[0]
-          selectCity.maxTemp = response.data.daily.temperature_2m_max[0]
-        } catch (e) {
-          alert('Owibqa Ottawa')
-        }
-      } else if (selectedCity.name === 'Manchester') {
-        try {
-          const response = await axios.get('https://api.open-meteo.com/v1/forecast?latitude=53.48&longitude=-2.24&daily=temperature_2m_max,temperature_2m_min&current_weather=true&timezone=auto')
-          const selectCity = this.selectedCities.find(el => el.name === 'Manchester')
-          selectCity.minTemp = response.data.daily.temperature_2m_min[0]
-          selectCity.maxTemp = response.data.daily.temperature_2m_max[0]
-        } catch (e) {
-          alert('Owibqa Manchester')
-        }
-      } else if (selectedCity.name === 'Bruges') {
-        try {
-          const response = await axios.get('https://api.open-meteo.com/v1/forecast?latitude=51.21&longitude=3.22&daily=temperature_2m_max,temperature_2m_min&current_weather=true&timezone=auto')
-          const selectCity = this.selectedCities.find(el => el.name === 'Bruges')
-          selectCity.minTemp = response.data.daily.temperature_2m_min[0]
-          selectCity.maxTemp = response.data.daily.temperature_2m_max[0]
-        } catch (e) {
-          alert('Owibqa Bruges')
-        }
-      }
-      this.predefinedCities.splice(this.predefinedCities.indexOf(selectedCity), 1)
+      const newCity = this.predefinedCities.find(city => city.name === value)
+      this.selectedCities.push(newCity)
+      await this.fetchTemperature(newCity)
+      this.predefinedCities.splice(this.predefinedCities.indexOf(newCity), 1)
     },
     deleteTheCity (id) {
       const selectedCity = this.selectedCities.find(c => c.id === id)
@@ -227,7 +170,7 @@ export default {
     }
   },
   mounted () {
-    this.fetchTempForDefaultCities()
+    this.fetchForDefaultCities()
   }
 }
 </script>
