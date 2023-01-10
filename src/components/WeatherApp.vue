@@ -3,9 +3,30 @@
     <h1 class="title">Today's weather</h1>
     <table>
       <tr>
-        <th>City</th>
-        <th>Min Temp</th>
-        <th>Max Temp</th>
+        <th>
+          <button class="sortButton" @click="sortByColumn('name'); isColumnSorted = !isColumnSorted">
+            City
+            <svg clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" viewBox="0 0 24 24">
+              <path d="m15.344 17.778c0-.414-.336-.75-.75-.75h-5.16c-.414 0-.75.336-.75.75s.336.75.75.75h5.16c.414 0 .75-.336.75-.75zm2.206-4c0-.414-.336-.75-.75-.75h-9.596c-.414 0-.75.336-.75.75s.336.75.75.75h9.596c.414 0 .75-.336.75-.75zm2.45-4c0-.414-.336-.75-.75-.75h-14.5c-.414 0-.75.336-.75.75s.336.75.75.75h14.5c.414 0 .75-.336.75-.75zm2-4c0-.414-.336-.75-.75-.75h-18.5c-.414 0-.75.336-.75.75s.336.75.75.75h18.5c.414 0 .75-.336.75-.75z" fill-rule="nonzero"/>
+            </svg>
+          </button>
+        </th>
+        <th>
+          <button class="sortButton" @click="sortByColumn('minTemp'); isColumnSorted = !isColumnSorted">
+            Min Temp
+            <svg clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" viewBox="0 0 24 24">
+              <path d="m15.344 17.778c0-.414-.336-.75-.75-.75h-5.16c-.414 0-.75.336-.75.75s.336.75.75.75h5.16c.414 0 .75-.336.75-.75zm2.206-4c0-.414-.336-.75-.75-.75h-9.596c-.414 0-.75.336-.75.75s.336.75.75.75h9.596c.414 0 .75-.336.75-.75zm2.45-4c0-.414-.336-.75-.75-.75h-14.5c-.414 0-.75.336-.75.75s.336.75.75.75h14.5c.414 0 .75-.336.75-.75zm2-4c0-.414-.336-.75-.75-.75h-18.5c-.414 0-.75.336-.75.75s.336.75.75.75h18.5c.414 0 .75-.336.75-.75z" fill-rule="nonzero"/>
+            </svg>
+          </button>
+        </th>
+        <th>
+          <button class="sortButton" @click="sortByColumn('maxTemp'); isColumnSorted = !isColumnSorted">
+            Max Temp
+            <svg clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" viewBox="0 0 24 24">
+              <path d="m15.344 17.778c0-.414-.336-.75-.75-.75h-5.16c-.414 0-.75.336-.75.75s.336.75.75.75h5.16c.414 0 .75-.336.75-.75zm2.206-4c0-.414-.336-.75-.75-.75h-9.596c-.414 0-.75.336-.75.75s.336.75.75.75h9.596c.414 0 .75-.336.75-.75zm2.45-4c0-.414-.336-.75-.75-.75h-14.5c-.414 0-.75.336-.75.75s.336.75.75.75h14.5c.414 0 .75-.336.75-.75zm2-4c0-.414-.336-.75-.75-.75h-18.5c-.414 0-.75.336-.75.75s.336.75.75.75h18.5c.414 0 .75-.336.75-.75z" fill-rule="nonzero"/>
+            </svg>
+          </button>
+        </th>
         <th></th>
       </tr>
       <tr :key="city.id" v-for="city in selectedCities">
@@ -99,7 +120,8 @@ export default {
           id: 9
         }
       ],
-      isListActive: false
+      isListActive: false,
+      isColumnSorted: false
     }
   },
   methods: {
@@ -193,6 +215,15 @@ export default {
       const selectedCity = this.selectedCities.find(c => c.id === id)
       this.selectedCities = this.selectedCities.filter(c => c.id !== id)
       this.predefinedCities.unshift(selectedCity)
+    },
+    ascendingSort (column) {
+      return (a, b) => a[column] > b[column] ? 1 : -1
+    },
+    descendingSort (column) {
+      return (a, b) => a[column] > b[column] ? -1 : 1
+    },
+    sortByColumn (columnName) {
+      this.selectedCities.sort(this.isColumnSorted ? this.ascendingSort(columnName) : this.descendingSort(columnName))
     }
   },
   mounted () {
@@ -283,6 +314,14 @@ td {
   flex-direction: column;
   li {
     text-align: left;
+  }
+}
+.sortButton {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 16px;
+  svg {
+    height: 14px;
   }
 }
 </style>
